@@ -45,7 +45,7 @@ end
   def destroy
     @micropost.destroy
     flash[:success] = 'メッセージを削除しました。'
-    redirect_to microposts_ur1
+    redirect_back(fallback_location: root_path)
   end
 
   private
@@ -53,5 +53,11 @@ end
   # Strong Parameter
   def micropost_params
     params.require(:micropost).permit(:content, :status)
+  end
+  def correct_user
+    @micropost = current_user.microposts.find_by(id: params[:id])
+    unless @micropost
+      redirect_to root_url
+    end
   end
 end
